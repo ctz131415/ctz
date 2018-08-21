@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.temptation.dao.UserDao">
+    <select id="findByUsername" parameterType="string" resultType="User">
+        SELECT * FROM userinfo WHERE username=#{username}
+    </select>
+    
+    <!-- 插入 -->  
+    <insert id="registerUser" parameterType="User" useGeneratedKeys="true" keyProperty="userid">  
+        INSERT INTO userinfo (username, password)  
+        VALUES (#{username}, #{password})  
+    </insert> 
+</mapper>

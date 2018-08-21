@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 启动自动扫描 -->
+    <context:component-scan base-package="cn.temptation.*" />
+
+    <!-- 注册MVC注解驱动 -->
+    <mvc:annotation-driven />
+
+    <!-- 静态资源可访问的设置方式 -->
+    <mvc:default-servlet-handler />
+    
+    <!-- 拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 先匹配所有路径，然后排除不需要检查的路径 -->
+            <mvc:mapping path="/**"/>
+            
+			<mvc:exclude-mapping path="/*.jsp"/>
+            <!-- 与登录相关的请求 -->
+            <mvc:exclude-mapping path="/user/login"/>
+            <mvc:exclude-mapping path="/user/register"/>
+
+            <!-- 以下是静态资源 -->
+            <mvc:exclude-mapping path="/images/**" />
+            <mvc:exclude-mapping path="/css/**" />
+            <mvc:exclude-mapping path="/font/**" />
+            <mvc:exclude-mapping path="/js/**" />
+            <mvc:exclude-mapping path="/datepicker/**" />
+
+            <!-- 用户是否已经登录的检查bean -->
+            <bean class="cn.temptation.util.UserAuth"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 总错误处理-->  
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+	    <property name="defaultErrorView">     
+	        <value>/error/error</value>  
+	    </property>  
+	    <property name="defaultStatusCode">     
+	        <value>500</value>  
+	    </property>      
+		<property name="warnLogCategory">     
+	        <value>org.springframework.web.servlet.handler.SimpleMappingExceptionResolver</value>  
+	    </property>      
+	</bean> 
+    
+    <!-- 配置视图解析器，可以显式设置，也可以不设置，不设置会依据SpringMVC的默认设置 -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    
+</beans>
